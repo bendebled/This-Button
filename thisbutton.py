@@ -4,7 +4,7 @@ class thisButton:
     def __init__(self):
         
         self.prev_state = None
-        self.activated_state = not pull_up
+        self.activated_state = True
 
         self.cur_time = None
         self.prev_state_change = None
@@ -20,9 +20,9 @@ class thisButton:
         self.held_function = None
         self.click_only_assigned = False
 
-        self.default_debounce_threshold = 2000000
+        self.default_debounce_threshold =   2000000
         self.default_long_press_threshold = 500000000
-        self.default_held_interval = 100000000
+        self.default_held_interval =        100000000
 
         self.debounce_threshold = self.default_debounce_threshold
         self.long_press_threshold = self.default_long_press_threshold
@@ -31,13 +31,13 @@ class thisButton:
 
         self.debug = False
     
-    def time_monotonic_ns():
+    def time_monotonic_ns(self):
         return time.ticks_us() * 1000
     
     #this needs to be called frequently from the main loop
     def tick(self, gpio_state):
         #read the pin and log the time, if not in a debounce waiting period
-        self.cur_time = time_monotonic_ns()
+        self.cur_time = self.time_monotonic_ns()
         if self.debouncing == False:
             self.cur_state = gpio_state
             if self.cur_state != self.prev_state:
@@ -169,7 +169,7 @@ class thisButton:
     def heldDuration(self):
         #return the amount of time in milliseconds that a button is currently held, or zero if it is not
         if self.long_press_activated == True:
-            return self.nsToMs((time_monotonic_ns() - self.prev_state_change))
+            return self.nsToMs((self.time_monotonic_ns() - self.prev_state_change))
         else:
             return 0
 
