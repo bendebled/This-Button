@@ -1,17 +1,9 @@
-import board
 import time
-import digitalio
 
 class thisButton:
-    def __init__(self, gpio, pull_up = True):
-        self.pin = digitalio.DigitalInOut(gpio)
-        if pull_up == True:
-            self.pin.pull = digitalio.Pull.UP
-        else:
-            self.pin.pull = digitalio.Pull.DOWN
+    def __init__(self):
         
         self.prev_state = None
-        self.cur_state = None
         self.activated_state = not pull_up
 
         self.cur_time = None
@@ -40,11 +32,11 @@ class thisButton:
         self.debug = False
        
     #this needs to be called frequently from the main loop
-    def tick(self):
+    def tick(self, gpio_state):
         #read the pin and log the time, if not in a debounce waiting period
         self.cur_time = time.monotonic_ns()
         if self.debouncing == False:
-            self.cur_state = self.pin.value
+            self.cur_state = gpio_state
             if self.cur_state != self.prev_state:
                 self.start_debounce()
         
@@ -179,20 +171,6 @@ class thisButton:
             return 0
 
     @property
-    def gpio_state(self):
-        #this is deprecated, should remove it.  replaced with gpioState
-        return self.pin.value
-
-    @property
-    def gpioState(self):
-        #return the raw value of the pin
-        return self.pin.value
-
-    @property
     def buttonActive(self):
         #returns true while the button is currently pressed after debouncing, not necessarily during a long press
         return self.active
-
-
-
-
