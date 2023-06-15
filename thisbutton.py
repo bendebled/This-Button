@@ -30,11 +30,14 @@ class thisButton:
         self.held_next_time = 0
 
         self.debug = False
-       
+    
+    def time_monotonic_ns():
+        return time.ticks_us() * 1000
+    
     #this needs to be called frequently from the main loop
     def tick(self, gpio_state):
         #read the pin and log the time, if not in a debounce waiting period
-        self.cur_time = time.monotonic_ns()
+        self.cur_time = time_monotonic_ns()
         if self.debouncing == False:
             self.cur_state = gpio_state
             if self.cur_state != self.prev_state:
@@ -166,7 +169,7 @@ class thisButton:
     def heldDuration(self):
         #return the amount of time in milliseconds that a button is currently held, or zero if it is not
         if self.long_press_activated == True:
-            return self.nsToMs((time.monotonic_ns() - self.prev_state_change))
+            return self.nsToMs((time_monotonic_ns() - self.prev_state_change))
         else:
             return 0
 
